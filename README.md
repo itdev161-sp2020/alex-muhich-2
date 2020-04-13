@@ -1,2 +1,0 @@
-# mike-hunsicker
-homework repo
