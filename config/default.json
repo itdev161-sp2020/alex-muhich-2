@@ -1,3 +1,4 @@
 {
-    "mongoURI": "mongodb+srv://tempuser:tempuserpass0@cluster0-gjdwh.mongodb.net/test?retryWrites=true&w=majority"
+    "mongoURI": "mongodb+srv://tempuser:tempuserpass0@cluster0-gjdwh.mongodb.net/test?retryWrites=true&w=majority",
+    "jwtSecret": "jwtSecret"
 }
