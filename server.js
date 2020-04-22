@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs';
 import User from './models/User';
 import jwt from 'jsonwebtoken';
 import config from 'config';
+import auth from './middleware/auth';
 
 
 //init express app
@@ -21,6 +22,19 @@ app.use(
         origin: 'http://localhost:3000'
     })
 );
+
+/**
+ * @route GET api/auth
+ * @desc Authenticate user
+ */
+app.get('/api/auth', auth, async (req, res) => {
+    try{
+        const user = await User.findById(req.user.id);
+        res.status(200).json(user);
+    }catch(error){
+        res.status(500).send('Unknown server error');
+    }
+});
 
 //api endpoint
 /**
