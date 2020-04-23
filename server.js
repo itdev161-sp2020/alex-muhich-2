@@ -237,6 +237,7 @@ app.delete('/api/posts/:id', auth, async (req, res) => {
         if(!post){
             return res.status(404).json({msg: 'Post not found'});
         }
+        //make sure the user created the post
         if(post.user.toString() !== req.user.id){
             return res.status(404).json({ msg: 'User not authorized'});
         }
@@ -246,7 +247,35 @@ app.delete('/api/posts/:id', auth, async (req, res) => {
         console.error(error);
         res.status(500).send('Server error');
     }
-})
+});
+/**
+ * @route PUT api/posts/:id
+ * @desc Update a post
+ */
+app.put('/api/posts/:id', auth, async (req, res) => {
+    try{
+        const {title, body} = req.body;
+        const post = await Post.findById(req.params.id);
+
+        //make sure the post was found
+        if(!post){
+            return res.status(404).json({msg: 'Post not found'});
+        }
+        //make sure the user created the post
+        if(post.user.toString() !== req.user.id){
+            return res.status(404).json({ msg: 'User not authorized'});
+        }
+        //update the post and return
+        post.title = title || post.title;
+        post.body = body || post.body;
+        
+        await post.save();
+        res.json(post);
+    }catch(error){
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+});
 
 //connection listener
 const port = 5000
