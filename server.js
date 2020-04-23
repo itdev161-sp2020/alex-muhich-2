@@ -196,6 +196,19 @@ app.post(
         }
     }
 );
+/**
+ * @route GET api/posts
+ * @desc Get posts
+ */
+app.get('/api/posts', auth, async (req, res) => {
+    try{
+        const posts = await Post.find().sort({ date: -1 });
+        res.json(posts);
+    }catch(error){
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+});
 
 //connection listener
 const port = 5000
