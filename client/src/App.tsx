@@ -4,10 +4,13 @@ import axios from 'axios';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import Register from './components/Register/Register';
 import Login from './components/Login/Login';
+import PostList from './components/PostList/PostList';
+import Post from './components/Post/Post';
 
 class App extends React.Component {
   state = {
     posts: [],
+    post: null,
     token: null,
     user: null
   }
@@ -68,6 +71,13 @@ class App extends React.Component {
     }
   }
 
+  viewPost = post => {
+    console.log(`view ${post.title}`);
+    this.setState({
+      post: post
+    });
+  };
+
   componentDidMount(){
     axios.get('http://localhost:5000')
       .then((response) => {
@@ -108,24 +118,23 @@ class App extends React.Component {
             </ul>
           </header>
           <main>
-            <Route exact path="/">
-              {user ? (
-                <React.Fragment>
-                  <div>Hello {user}!</div>
-                  <div>{posts.map(post =>{
-                    <div key={post._id}>
-                      <h1>{post.title}</h1>
-                      <p>{post.body}</p>
-                      </div>
-                  })
-                  }</div>
-                </React.Fragment>) : (
-                <React.Fragment>
-                  Please Register or login
-                  </React.Fragment>
-                )}
-            </Route>
             <Switch>
+              <Route exact path="/">
+                {user ? (
+                  <React.Fragment>
+                    <div>Hello {user}!</div>
+                    <PostList posts = {posts} clickPost={this.viewPost} />
+                  </React.Fragment>
+                  ) : (
+                  <React.Fragment>
+                    Please Register or login
+                    </React.Fragment>
+                  )}
+              </Route>
+              <Route path="/posts/:postId">
+                {/* Line 136 didn't like post */}
+                <Post post={posts} />
+              </Route>
               <Route
                 exact path="/register"
                 render={() => <Register {...authProps} />} />
