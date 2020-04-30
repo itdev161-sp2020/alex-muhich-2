@@ -18,57 +18,58 @@ const EditPost = ({ token, post, onPostUpdated}) => {
             [name]: value
         });
     };
+
+    const update = async() => {
+        if(!title || !body){
+            console.log('Title and body are required');
+        }else{
+            const newPost = {
+                title: title,
+                body: body
+            };
+    
+            try{
+                const config = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-auth-token': token
+                    }
+                };
+    
+                //create the post
+                const body = JSON.stringify(newPost);
+                const res = await axios.put(`http://localhost:5000/api/posts/${post._id}`,
+                body,
+                config
+                );
+    
+                //call the handler and redirect
+                onPostUpdated(res.data);
+                history.pushState('/');
+            }catch(error){
+                console.error(`Error creating post: ${error,response.data}`);
+            }
+        }
+        return(
+            <div className="form-container">
+                <h2>Edit Post</h2>
+                <input
+                    name="title"
+                    type="text"
+                    placeholder="Title"
+                    value={title}
+                    onChange={e => onChange(e)} />
+                <textarea
+                    name="body"
+                    cols="36"
+                    rows="10"
+                    value={body}
+                    onChange={e => onChange(e)}></textarea>
+                <button onClick={() => update()}>Submit</button>
+            </div>
+        );
+    };
 }
 
-const update = async() => {
-    if(!title || !body){
-        console.log('Title and body are required');
-    }else{
-        const newPost = {
-            title: title,
-            body: body
-        };
-
-        try{
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-auth-token': token
-                }
-            };
-
-            //create the post
-            const body = JSON.stringify(newPost);
-            const res = await axios.put(`http://localhost:5000/api/posts/${post._id}`,
-            body,
-            config
-            );
-
-            //call the handler and redirect
-            onPostUpdated(res.data);
-            history.pushState('/');
-        }catch(error){
-            console.error(`Error creating post: ${error,response.data}`);
-        }
-    }
-    return(
-        <div className="form-container">
-            <h2>Edit Post</h2>
-            <input
-                name="title"
-                type="text"
-                placeholder="Title"
-                value={title}
-                onChange={e => onChange(e)} />
-            <textarea
-                name="body"
-                cols="36"
-                rows="10"
-                value={body}
-                onChange={e => onChange(e)}></textarea>
-            <button onClick={() => update()}>Submit</button>
-        </div>
-    );
-};
 
 export default EditPost;

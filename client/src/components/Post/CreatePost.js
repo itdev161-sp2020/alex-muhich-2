@@ -19,37 +19,36 @@ const CreatePost = ({onPostCreated}) => {
             [name]: value
         });
     };
-}
 
-const create = async () => {
-    if(!title || !body){
-        console.log('Title and body are required');
-    }else{
-        const newPost = {
-            title: title,
-            body: body
-        };
-
-        try{
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-auth-token': token
-                }
+    const create = async () => {
+        if(!title || !body){
+            console.log('Title and body are required');
+        }else{
+            const newPost = {
+                title: title,
+                body: body
             };
-
-            const body = JSON.stringify(newPost);
-            const res = await axios.post('http://localhost:5000/api/posts',
-                body,
-                config);
-            //call the handler and redirect
-            onPostCreated(res.data);
-            history.pushState('/');
-        }catch(error){
-            console.error(`Error creating post: ${error.response.data}`);
+    
+            try{
+                const config = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-auth-token': token
+                    }
+                };
+    
+                const body = JSON.stringify(newPost);
+                const res = await axios.post('http://localhost:5000/api/posts',
+                    body,
+                    config);
+                //call the handler and redirect
+                onPostCreated(res.data);
+                history.push('/');
+            }catch(error){
+                console.error(`Error creating post: ${error.response.data}`);
+            }
         }
-    }
-
+    };
     return (
         <div className="form-container">
             <h2>Create New Post</h2>
@@ -71,5 +70,7 @@ const create = async () => {
         </div>
     );
 };
+
+
 
 export default CreatePost;
